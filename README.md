@@ -41,3 +41,7 @@ yarn build
 ## License
 
 [GPL](https://github.com/YuzeTT/GeeView-vue/blob/main/LICENSE)
+
+## 特别感谢
+
+- UI灵感：[MikuTools](https://tools.miku.ac/)
