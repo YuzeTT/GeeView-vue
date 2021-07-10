@@ -14,6 +14,7 @@
         </el-alert>
         <div style="padding: 5px 0"></div>
         <Welcome/>
+        <ProductList/>
       </el-main>
     </el-container>
   </div>
@@ -25,10 +26,12 @@ const axios = require('axios');
 import config from '../../../package.json'
 import Welcome from '@/components/Welcome.vue'
 import Header from '@/components/Header.vue'
+import ProductList from '@/components/ProductList.vue'
 export default {
   components: {
     Welcome,
-    Header
+    Header,
+    ProductList
   },
   data() {
     return {
@@ -36,119 +39,15 @@ export default {
       alert: {
         title: '警告'
       },
-      header: {
-        status: {
-          text: '连接中',
-          color:'#909399',
-        }
-      },
-      login: {
-        userid: '未登录',
-        qqname: '',
-        style: {
-          color:'#F56C6C',
-        }
-      }
     }
   },
   mounted () {
-    // 判断登录状态
-    const qq = localStorage.getItem('qq')
-    console.log(qq)
-    if (localStorage.getItem('qq') != null) {
-      axios
-        .get('https://api.usuuu.com/qq/'+qq)
-        .then(response => {
-          console.log(response)
-          this.login.userid = response.data.data.name
-          this.login.style.color = '#909399'
-        })
-    }
-    // 后端连通测试
-    axios
-      .get('http://192.168.2.179:2048/status')
-      .then(response => {
-        if (response.data.status == 200) {
-          this.header.status.color = '#67C23A'
-          this.header.status.text = '已连接'
-        }
-      })
-      .catch(error => {
-        console.log(error)
-        this.header.status.color = '#F56C6C'
-        this.header.status.text = '无连接'
-      })
-    // 判断版本给出提示
-    if (this.version.split(' ')[1]=='Beta') {
+    if (this.version.split('-')[1]=='alpha') {
       this.alert.title = '当前为测试版，版本号：'+this.version
     }
-    
   },
   methods: {
-    openStatus() {
-      this.$alert('这是一段内容', '标题名称', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'info',
-            message: `action: ${ action }`
-          });
-        }
-      });
-    },
-     openLogin:function() {
-      if(localStorage.getItem('qq') == null) {
-        this.$prompt('请输入QQ号', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          inputErrorMessage: 'QQ号格式不正确'
-        }).then(({ value }) => {
-          // this.$message({
-          //   type: 'success',
-          //   message: '绑定到: ' + value
-          // });
-          localStorage.setItem('qq', value);
-          location.reload()
-          // axios
-          //   .get('https://api.usuuu.com/qq/'+qq)
-          //   .then(response => {
-              
-          //     this.login.userid = this.login.qqname
-          //     this.login.style.color = '#909399'
-          //     console.log(response)
-          //     location.reload()
-          //     // this.login.qqname = response.data.data.name
-          //     // this.login.userid = response.data.data.name
-          //     // this.login.style.color = '#909399'
-          //   })
-          //   .catch(error => {
-          //     console.log(error)
-          //   })
-            
-        }).catch(() => {
-          
-        });
-        
-      }else{
-        this.$confirm('确定要退出登录吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          localStorage.removeItem('qq')
-          this.login.userid = '未登录'
-          this.login.style.color = '#F56C6C'
-          this.$message({
-            type: 'success',
-            message: '退出成功!'
-          });
-          location.reload()
-        }).catch(() => {
-          
-        })
-      }
-    }
+    
   }
 }
 </script>
@@ -160,10 +59,4 @@ body{
   /* font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif; */
   font-family: "PingFang SC",Arial,sans-serif;
 }
-/* 
-.el-header {
-  height: 100px;
-  padding-bottom: 40px;
-} */
-
 </style>
