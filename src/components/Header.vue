@@ -22,7 +22,6 @@
 </template>
 
 <script>
-const axios = require('axios');
 import config from '../../package.json'
 export default {
   data() {
@@ -51,7 +50,7 @@ export default {
     const qq = localStorage.getItem('qq')
     console.log(qq)
     if (localStorage.getItem('qq') != null) {
-      axios
+      this.$axios
         .get('https://api.usuuu.com/qq/'+qq)
         .then(response => {
           console.log(response)
@@ -60,8 +59,8 @@ export default {
         })
     }
     // 后端连通测试
-    axios
-      .get('http://192.168.2.179:2048/status')
+    this.$axios
+      .get('/status')
       .then(response => {
         if (response.data.status == 200) {
           this.header.status.color = '#67C23A'
